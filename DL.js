@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const { ObjectID } = require('bson');
 require('custom-env').env(true)
 var MongoClient = require('mongodb').MongoClient;
 var dbConnection = "mongodb://"
@@ -22,7 +23,7 @@ class EchoDL {
 
     static initializeDB() {
         this.connect(dbo => {
-            dbo.collection("messages").createIndex( { time: 1, timstamp: 1 } )
+            dbo.collection("messages").createIndex( { time: 1, sent: 1, timstamp: 1 } )
         })
     }
 
@@ -33,7 +34,8 @@ class EchoDL {
                 const rec = {
                     msg: msg,
                     time: time,
-                    timestamp : new Date().getTime()
+                    timestamp : new Date().getTime(),
+                    sent: 0
                 }
                 dbo.collection("messages").insertOne(rec, function(err, res) {
                     if (err)
@@ -45,6 +47,34 @@ class EchoDL {
         }).catch(err => result = false)
 
         return result
+    }
+
+    static async getMessagesToEcho() {
+        var msgs
+        await new Promise((resolve, reject) =>  {
+            this.connect(dbo => {
+                dbo.collection("messages").find({'time': {$lte: new Date().getTime()}, 'sent' : {$eq: 0}})
+                .sort({time: 1, timestamp: 1})
+                .toArray((err, results) => {
+                    if (err)
+                        reject(err)
+                    else
+                        resolve(results)
+                })
+            })
+        }).then(results => msgs = results)
+
+        return msgs
+    }
+
+    static async markAsSent(_id) {
+        return new Promise((resolve, reject) => {
+            this.connect(dbo => {
+                dbo.collection("messages").updateOne({'_id' : {$eq: ObjectID(_id)}}, {$set: {
+                    'sent': 1
+                }})
+            }, () => resolve())
+        })
     }
 
 }
