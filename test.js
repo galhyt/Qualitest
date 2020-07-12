@@ -1,6 +1,8 @@
 const request = require('request')
 const { exit } = require('process')
 
+const appUrl = process.env.APP_URL
+
 async function main() {
     var sleepTime = 500
     var msgTimeInterval = 200
@@ -13,7 +15,7 @@ async function main() {
     var time = new Date()
     time.setTime(time.getTime() - 60000)
     for (var i = 1 ;; i++, time.setTime(time.getTime()+msgTimeInterval) ) {
-        var url = `http://localhost:3001/echoAtTime?msg=message No. ${i}&time=${formatDate(time)}`
+        var url = `${appUrl}/echoAtTime?msg=message No. ${i}&time=${formatDate(time)}`
         await registerMsg()
         await sleep(sleepTime)
     }
