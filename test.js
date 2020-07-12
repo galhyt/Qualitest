@@ -16,7 +16,8 @@ async function main() {
     time.setTime(time.getTime() - 60000)
     for (var i = 1 ;; i++, time.setTime(time.getTime()+msgTimeInterval) ) {
         var url = `${appUrl}/echoAtTime?msg=message No. ${i}&time=${formatDate(time)}`
-        await registerMsg(url)
+        console.log(url)
+        await registerMsg()
         await sleep(sleepTime)
     }
 
@@ -24,7 +25,7 @@ async function main() {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    async function registerMsg(url) {
+    async function registerMsg() {
         var error =  null
         await new Promise((resolve, reject) => {
             request(url, {}, (err, res, body) => {
