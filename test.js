@@ -1,5 +1,5 @@
+require('custom-env').env(true)
 const request = require('request')
-const { exit } = require('process')
 
 const appUrl = process.env.APP_URL
 
@@ -35,7 +35,7 @@ async function main() {
             })
         }).catch(err => error = err)
 
-        if (error) exit
+//        if (error) exit
 
     }
 
