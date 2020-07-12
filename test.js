@@ -2,7 +2,7 @@ require('custom-env').env(true)
 const request = require('request')
 
 const appUrl = process.env.APP_URL
-
+if (appUrl == '') appUrl = 'https://echoattime.herokuapp.com'
 
 async function main() {
     var sleepTime = 500
