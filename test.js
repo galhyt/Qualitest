@@ -10,9 +10,6 @@ async function main() {
         if (process.argv.length > 3) msgTimeInterval = Number(argvCodes[1])
     }
 
-    console.log(msgTimeInterval)
-    exit
-
     var time = new Date()
     time.setTime(time.getTime() - 60000)
     for (var i = 1 ;; i++, time.setTime(time.getTime()+msgTimeInterval) ) {
@@ -26,11 +23,9 @@ async function main() {
     }
 
     async function registerMsg() {
-        console.log(url)
         var error =  null
         await new Promise((resolve, reject) => {
             request(url, {}, (err, res, body) => {
-                console.log((!err ? body : err.message))
                 if (err)
                     reject(err)
                 else

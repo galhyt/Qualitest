@@ -70,7 +70,7 @@ class EchoDL {
     static async markAsSent(_id) {
         return new Promise((resolve, reject) => {
             this.connect(dbo => {
-                dbo.collection("messages").updateOne({'_id' : {$eq: ObjectID(_id)}}, {$set: {
+                dbo.collection("messages").updateOne({'_id' : {$eq: new ObjectID(_id)}}, {$set: {
                     'sent': 1
                 }})
             }, () => resolve())

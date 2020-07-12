@@ -25,10 +25,12 @@ class EchoBL {
     static async echoMessages() {
         const msgs = await EchoDL.getMessagesToEcho()
         var promises = []
-        msgs.forEach(msg => {
+        for (var i in msgs) {
+            const msg = msgs[i]
             console.log(`${dateFormat(new Date())} - "${msg.msg}" scheduled for ${dateFormat(new Date(msg.time))} created at ${dateFormat(new Date(msg.timestamp))}`)
             promises.push(EchoDL.markAsSent(msg._id))
-        });
+            await sleep(100)
+        }
 
         function dateFormat(d) {
             return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`
@@ -36,6 +38,10 @@ class EchoBL {
 
         await Promise.all(promises)
     }
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 module.exports = EchoBL;
