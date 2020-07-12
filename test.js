@@ -3,6 +3,7 @@ const request = require('request')
 
 const appUrl = process.env.APP_URL
 
+
 async function main() {
     var sleepTime = 500
     var msgTimeInterval = 200
