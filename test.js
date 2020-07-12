@@ -2,7 +2,6 @@ require('custom-env').env(true)
 const request = require('request')
 
 const appUrl = process.env.APP_URL
-if (typeof(appUrl) == 'undefined') appUrl = 'https://echoattime.herokuapp.com'
 
 async function main() {
     var sleepTime = 500
@@ -17,7 +16,7 @@ async function main() {
     time.setTime(time.getTime() - 60000)
     for (var i = 1 ;; i++, time.setTime(time.getTime()+msgTimeInterval) ) {
         var url = `${appUrl}/echoAtTime?msg=message No. ${i}&time=${formatDate(time)}`
-        await registerMsg()
+        await registerMsg(url)
         await sleep(sleepTime)
     }
 
@@ -25,7 +24,7 @@ async function main() {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    async function registerMsg() {
+    async function registerMsg(url) {
         var error =  null
         await new Promise((resolve, reject) => {
             request(url, {}, (err, res, body) => {
